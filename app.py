@@ -6,10 +6,11 @@ import requests
 import os
 from dotenv import load_dotenv
 load_dotenv()
-HF_API_KEY = os.getenv("HF_API_KEY")
 
-if not HF_API_KEY:
-    raise ValueError("❌ HF_API_KEY not found in .env")
+# AI API Keys
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+HF_API_KEY = os.getenv("HF_API_KEY")
 
 
 app = Flask(__name__)
@@ -238,55 +239,236 @@ def search():
 
     return jsonify(output)
 
-# ================== 💡 SUGGESTIONS ==================
+# ================== 💡 AI SUGGESTIONS ==================
 @app.route('/api/suggest')
 def suggest():
     query = request.args.get('q')
 
+    # Try Groq first (free & fast)
+    if GROQ_API_KEY:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{
+                        "role": "user",
+                        "content": f"Generate exactly 5 short search suggestions for: {query}. Only return the suggestions, one per line, no numbering."
+                    }],
+                    "max_tokens": 100,
+                    "temperature": 0.7
+                },
+                timeout=10
+            )
+            data = response.json()
+            if "choices" in data:
+                suggestions = data["choices"][0]["message"]["content"].strip().split("\n")
+                suggestions = [s.strip() for s in suggestions if s.strip() and len(s.strip()) > 3][:5]
+                if suggestions:
+                    return jsonify(suggestions)
+        except Exception as e:
+            print(f"Groq suggest error: {e}")
+    
+    # Fallback suggestions (always works)
     suggestions = [
         query + " tutorial",
-        query + " example",
-        query + " latest",
+        query + " examples",
+        query + " latest news",
         query + " interview questions",
-        query + " project ideas"
+        query + " how to learn"
     ]
-
     return jsonify(suggestions)
 
 
+# ================== 🤖 DIRECT ANSWER ==================
+@app.route('/api/direct-answer')
+def direct_answer():
+    query = request.args.get('q')
+    
+    if GROQ_API_KEY:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{
+                        "role": "user",
+                        "content": f"Answer this question directly and concisely in 2-3 sentences: {query}"
+                    }],
+                    "max_tokens": 150,
+                    "temperature": 0.5
+                },
+                timeout=10
+            )
+            data = response.json()
+            if "choices" in data:
+                answer = data["choices"][0]["message"]["content"].strip()
+                return jsonify({"has_answer": True, "answer": answer, "query": query})
+        except Exception as e:
+            print(f"Direct answer error: {e}")
+    
+    return jsonify({"has_answer": False, "answer": "", "query": query})
+
+
+# ================== ❓ FOLLOW-UP QUESTIONS ==================
+@app.route('/api/follow-up')
+def follow_up():
+    query = request.args.get('q')
+    
+    if GROQ_API_KEY:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{
+                        "role": "user",
+                        "content": f"Based on '{query}', generate exactly 4 related questions users might ask. Return only questions, one per line, no numbering."
+                    }],
+                    "max_tokens": 200,
+                    "temperature": 0.7
+                },
+                timeout=10
+            )
+            data = response.json()
+            if "choices" in data:
+                questions = data["choices"][0]["message"]["content"].strip().split("\n")
+                questions = [q.strip() for q in questions if q.strip() and len(q.strip()) > 10][:4]
+                if questions:
+                    return jsonify({"questions": questions})
+        except Exception as e:
+            print(f"Follow-up error: {e}")
+    
+    # Fallback questions (always available)
+    questions = [
+        f"What is {query}?",
+        f"Top facts about {query}",
+        f"{query} tutorial for beginners",
+        f"Common {query} interview questions"
+    ]
+    return jsonify({"questions": questions})
+
+
+# ================== 📝 SUMMARIZE URL ==================
+@app.route('/api/summarize')
+def summarize():
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"error": "No URL provided"}), 400
+    
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        page = requests.get(url, headers=headers, timeout=15)
+        text = page.text[:3000]
+        
+        if GROQ_API_KEY:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{
+                        "role": "user",
+                        "content": f"Summarize this content briefly in 2-3 sentences: {text}"
+                    }],
+                    "max_tokens": 150,
+                    "temperature": 0.5
+                },
+                timeout=10
+            )
+            data = response.json()
+            if "choices" in data:
+                summary = data["choices"][0]["message"]["content"].strip()
+                return jsonify({"summary": summary, "url": url, "success": True})
+    except Exception as e:
+        print(f"Summarize error: {e}")
+    
+    return jsonify({"summary": "Unable to summarize this page.", "url": url, "success": False})
+
+
+# ================== ⚖️ COMPARE TOPICS ==================
+@app.route('/api/compare')
+def compare():
+    query = request.args.get('q')
+    
+    if GROQ_API_KEY:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{
+                        "role": "user",
+                        "content": f"Compare {query}. Give a brief comparison in 3-4 sentences."
+                    }],
+                    "max_tokens": 200,
+                    "temperature": 0.5
+                },
+                timeout=10
+            )
+            data = response.json()
+            if "choices" in data:
+                comparison = data["choices"][0]["message"]["content"].strip()
+                return jsonify({"comparison": comparison, "query": query, "success": True})
+        except Exception as e:
+            print(f"Compare error: {e}")
+    
+    return jsonify({"comparison": "Unable to generate comparison.", "query": query, "success": False})
+
+
+# ================== 🧠 AI SUMMARY ==================
 @app.route('/api/ai-summary')
 def ai_summary():
     query = request.args.get('q')
 
-    try:
-        response = requests.post(
-            "https://api-inference.huggingface.co/models/google/flan-t5-large",
-            headers={
-                "Authorization": f"Bearer {HF_API_KEY}"
-            },
-            json={
-                "inputs": f"Answer this clearly in 2 lines: {query}",
-                "options": {"wait_for_model": True}
-            }
-        )
-
-        data = response.json()   # ✅ IMPORTANT
-
-        # ✅ Success case
-        if isinstance(data, list):
-            return jsonify({"answer": data[0].get("generated_text", "")})
-
-        # ✅ Error case
-        if isinstance(data, dict) and "error" in data:
-            return jsonify({"answer": "⚠️ AI not available right now"})
-
-        return jsonify({"answer": "No response from AI"})
-
-    except Exception as e:
-        print("ERROR:", e)
-        return jsonify({"answer": "AI service error"})
+    if GROQ_API_KEY:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{
+                        "role": "user",
+                        "content": f"Give a brief answer in 1-2 sentences: {query}"
+                    }],
+                    "max_tokens": 100,
+                    "temperature": 0.5
+                },
+                timeout=10
+            )
+            data = response.json()
+            if "choices" in data:
+                answer = data["choices"][0]["message"]["content"].strip()
+                return jsonify({"answer": answer})
+        except Exception as e:
+            print(f"AI Summary error: {e}")
     
-    # ================== ⭐ FAVORITES ==================
+    return jsonify({"answer": "AI service temporarily unavailable."})
+
+# ================== ⭐ FAVORITES ==================
 
 def init_favorites_db():
     conn = sqlite3.connect('users.db')

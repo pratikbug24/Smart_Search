@@ -1,43 +1,67 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2644619789277551"
-      crossorigin="anonymous"
-    ></script>
     <title>Smart Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
       body {
-        font-family: Arial;
+        font-family: 'Poppins', sans-serif;
         margin: 0;
         transition: 0.3s;
       }
 
       .light {
-        background: #f8f9fa;
-        color: black;
+        background: #ffffff;
+        color: #333;
       }
       .dark {
-        background: #121212;
+        background: #1a1a2e;
         color: white;
       }
 
       .container {
         max-width: 900px;
-        margin: 80px auto;
-        padding: 0 15px;
+        margin: 0 auto;
+        padding: 30px 20px;
       }
 
       h1 {
         text-align: center;
+        color: #333;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 30px;
       }
 
       .search-box {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         position: relative;
         margin-top: 20px;
+        z-index: 100;
+        background: white;
+        padding: 8px;
+        border-radius: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      }
+
+      .search-box input {
+        position: relative;
+        z-index: 101;
+        flex: 1;
+        padding: 16px 24px;
+        border-radius: 50px;
+        border: none;
+        font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
       }
 
       input {
@@ -47,99 +71,237 @@
         border: 1px solid #ccc;
       }
 
-      button {
-        padding: 12px 20px;
+      button.search-btn {
+        padding: 14px 28px;
         border: none;
-        background: #1a73e8;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         color: white;
-        border-radius: 25px;
+        border-radius: 50px;
         cursor: pointer;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      button.search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+      }
+
+      button.mic-btn {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 50%;
+        padding: 14px;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      button.mic-btn:hover {
+        transform: scale(1.1);
+      }
+
+      button.mic-btn.listening {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee0979 100%);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
       }
 
       /* Tabs */
       .tabs {
         display: flex;
         gap: 20px;
-        margin-top: 20px;
-        border-bottom: 1px solid #ccc;
+        margin-top: 30px;
+        justify-content: center;
       }
 
       .tabs span {
-        padding: 10px;
+        padding: 12px 24px;
         cursor: pointer;
+        color: #666;
+        font-weight: 500;
+        border-radius: 30px;
+        transition: all 0.3s;
+        background: #f0f0f0;
+      }
+
+      .tabs span:hover {
+        background: #e0e0e0;
+        color: #333;
       }
 
       .tabs .active {
-        border-bottom: 3px solid #1a73e8;
-        color: #1a73e8;
+        background: #667eea;
+        color: white;
+        font-weight: 600;
+      }
+
+      .dark .tabs span {
+        background: rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
+      }
+
+      .dark .tabs span:hover {
+        background: rgba(255,255,255,0.2);
+        color: white;
+      }
+
+      .dark .tabs .active {
+        background: #667eea;
+        color: white;
       }
 
       /* Results */
       .results {
-        margin-top: 20px;
+        margin-top: 30px;
       }
 
       .result {
         background: white;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+
+      .result:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
       }
 
       .dark .result {
-        background: #1e1e1e;
+        background: #2d2d2d;
+        border-left-color: #667eea;
       }
 
       .result a {
         font-size: 18px;
-        color: #1a0dab;
+        color: #667eea;
         text-decoration: none;
+        font-weight: 600;
+      }
+
+      .result a:hover {
+        color: #764ba2;
+        text-decoration: underline;
       }
 
       .dark .result a {
-        color: #8ab4f8;
+        color: #4facfe;
       }
 
       .result p {
-        margin-top: 5px;
+        margin-top: 8px;
+        color: #666;
+        line-height: 1.6;
+      }
+
+      .dark .result p {
+        color: rgba(255,255,255,0.7);
+      }
+
+      .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .fav-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #ccc;
+        transition: all 0.3s;
+      }
+
+      .fav-btn:hover {
+        color: #f5576c;
+        transform: scale(1.2);
+      }
+
+      .fav-btn.active {
+        color: #f5576c;
+      }
+
+      .dark .fav-btn {
+        color: #666;
+      }
+
+      .dark .fav-btn:hover {
+        color: #f5576c;
       }
 
       /* Image grid */
       .image-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+      }
+
+      .img-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .dark .img-card {
+        background: #2d2d2d;
+      }
+
+      .img-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       }
 
       .img-card img {
         width: 100%;
-        border-radius: 10px;
+        height: 150px;
+        object-fit: cover;
       }
 
       /* Video grid */
       .video-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
       }
 
       .video-card {
         background: white;
-        padding: 10px;
-        border-radius: 10px;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       }
 
       .dark .video-card {
-        background: #1e1e1e;
+        background: #2d2d2d;
+      }
+
+      .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       }
 
       .video-thumb {
         position: relative;
+        height: 180px;
+        overflow: hidden;
       }
 
       .video-thumb img {
         width: 100%;
-        border-radius: 10px;
+        height: 100%;
+        object-fit: cover;
       }
 
       .play-btn {
@@ -147,269 +309,606 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 28px;
-        color: white;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 8px 12px;
+        width: 50px;
+        height: 50px;
+        background: rgba(0,0,0,0.7);
         border-radius: 50%;
-      }
-
-      /* Suggestions */
-      .suggestions {
-        position: absolute;
-        top: 55px;
-        width: 100%;
-        background: white;
-        border-radius: 10px;
-        z-index: 10;
-      }
-
-      .dark .suggestions {
-        background: #2a2a2a;
-      }
-
-      .suggestions div {
-        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
         cursor: pointer;
       }
 
-      .suggestions div:hover {
-        background: #eee;
+      .video-card h3 {
+        margin: 16px 0 8px;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .dark .video-card h3 {
+        color: white;
+      }
+
+      .video-card p {
+        margin: 0 0 16px;
+        padding: 0 16px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .dark .video-card p {
+        color: rgba(255,255,255,0.7);
       }
 
       /* Spinner */
       .spinner {
         display: none;
         text-align: center;
-        margin-top: 20px;
+        margin-top: 40px;
       }
 
       .spinner div {
-        width: 30px;
-        height: 30px;
-        border: 4px solid #ccc;
-        border-top: 4px solid #1a73e8;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e0e0e0;
+        border-top-color: #667eea;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        margin: auto;
+        margin: 0 auto;
       }
 
       @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
+        to { transform: rotate(360deg); }
       }
 
-      /* History */
-      .history {
-        margin-top: 10px;
-        display: none; /* Hidden by default, show on focus */
+      /* Suggestions dropdown */
+      .suggestions {
         position: absolute;
+        top: 100%;
+        left: 0;
         width: 100%;
-        max-width: 580px;
         background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        border-radius: 16px;
+        margin-top: 8px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         z-index: 100;
-        max-height: 400px;
-        overflow-y: auto;
+        display: none;
+        overflow: hidden;
       }
 
-      .dark .history {
-        background: #2a2a2a;
+      .suggestions.show {
+        display: block;
+      }
+
+      .dark .suggestions {
+        background: #2d2d2d;
+      }
+
+      .suggestions div {
+        padding: 14px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #333;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .dark .suggestions div {
+        color: white;
+        border-bottom-color: #404040;
+      }
+
+      .suggestions div:hover {
+        background: #f5f5f5;
+        padding-left: 30px;
+      }
+
+      .dark .suggestions div:hover {
+        background: #404040;
+      }
+
+      /* History dropdown */
+      .history {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        border-radius: 16px;
+        margin-top: 8px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        z-index: 100;
+        display: none;
+        overflow: hidden;
       }
 
       .history.show {
         display: block;
       }
 
-      .history-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 15px;
-        cursor: pointer;
-        transition: 0.2s;
-      }
-
-      .history-item:hover {
-        background: #f0f0f0;
-      }
-
-      .dark .history-item:hover {
-        background: #3a3a3a;
-      }
-
-      .history-icon {
-        color: #888;
-        margin-right: 15px;
-        font-size: 18px;
-        flex-shrink: 0;
-      }
-
-      .dark .history-icon {
-        color: #aaa;
-      }
-
-      .history-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .history-text {
-        font-size: 16px;
-      }
-
-      .history-time {
-        font-size: 12px;
-        color: #888;
-        margin-top: 2px;
-      }
-
-      .dark .history-time {
-        color: #aaa;
-      }
-
-      .history-delete {
-        color: #ccc;
-        font-size: 18px;
-        padding: 5px 10px;
-        border-radius: 50%;
-        opacity: 0;
-        transition: 0.2s;
-      }
-
-      .history-item:hover .history-delete {
-        opacity: 1;
-      }
-
-      .history-delete:hover {
-        background: #eee;
-        color: #666;
-      }
-
-      .dark .history-delete:hover {
-        background: #444;
-        color: #fff;
+      .dark .history {
+        background: #2d2d2d;
       }
 
       .history-header {
-        padding: 10px 15px;
-        color: #666;
-        font-size: 14px;
-        border-bottom: 1px solid #eee;
+        padding: 12px 20px;
+        font-size: 12px;
+        color: #999;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       .dark .history-header {
-        border-color: #444;
-        color: #aaa;
+        color: #666;
+        border-bottom-color: #404040;
       }
 
-      .history-clear {
-        padding: 10px 15px;
-        color: #1a73e8;
-        font-size: 14px;
+      .history-item {
+        padding: 14px 20px;
         cursor: pointer;
-        border-top: 1px solid #eee;
-        text-align: center;
+        transition: all 0.2s;
+        color: #333;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
 
-      .dark .history-clear {
-        border-color: #444;
+      .dark .history-item {
+        color: white;
+        border-bottom-color: #404040;
       }
 
-      .history-clear:hover {
+      .history-item:hover {
         background: #f5f5f5;
       }
 
-      .dark .history-clear:hover {
-        background: #3a3a3a;
+      .dark .history-item:hover {
+        background: #404040;
       }
 
-      .toggle {
-        position: absolute;
-        top: 20px;
+      .history-item span:first-child {
+        opacity: 0.5;
       }
 
-      .mic-btn {
-        background: #34a853;
-        border-radius: 50%;
-        padding: 12px;
+      .history-clear {
+        color: #f5576c;
+        cursor: pointer;
+        font-size: 12px;
       }
 
-      .mic-btn.listening {
-        background: red;
-        animation: pulse 1s infinite;
+      .history-clear:hover {
+        text-decoration: underline;
       }
 
-      .ai-loading {
+      /* Navbar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      .dark .navbar {
+        background: #1a1a1a;
+      }
+
+      .nav-brand {
+        font-size: 22px;
+        font-weight: 700;
+        color: #667eea;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: #666;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-links a:hover {
+        color: #667eea;
+      }
+
+      .dark .nav-links a {
+        color: rgba(255,255,255,0.7);
+      }
+
+      .dark .nav-links a:hover {
+        color: #4facfe;
+      }
+
+      .nav-user {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
       }
 
-      .ai-spinner {
-        width: 18px;
-        height: 18px;
-        border: 3px solid #ccc;
-        border-top: 3px solid #1a73e8;
+      .nav-avatar {
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        background: #667eea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
       }
 
-      .hamburger {
-        font-size: 20px;
+      /* Toggle button */
+      .toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        font-size: 24px;
         cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .toggle:hover {
+        transform: scale(1.1);
+      }
+
+      .dark .toggle {
+        background: #2d2d2d;
+      }
+
+      /* Hamburger menu icon */
+      .hamburger {
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
         padding: 5px 10px;
-        border-radius: 5px;
+        border-radius: 8px;
+        transition: all 0.2s;
       }
 
       .hamburger:hover {
-        background: #eee;
+        background: #f0f0f0;
+        color: #667eea;
       }
 
+      .dark .hamburger {
+        color: rgba(255,255,255,0.7);
+      }
+
+      .dark .hamburger:hover {
+        background: rgba(255,255,255,0.1);
+        color: #4facfe;
+      }
+
+      /* Menu dropdown */
       .menu-dropdown {
-        display: none;
+        position: static;
+      }
+
+      .menu-dropdown .menu-content {
         position: absolute;
-        top: 50px;
+        top: 100%;
         right: 0;
         background: white;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
+        min-width: 180px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         z-index: 1000;
-        min-width: 150px;
+        overflow: hidden;
+        margin-top: 5px;
+      }
+
+      
+
+      .menu-icon {
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .dark .menu-icon {
+        color: white;
+      }
+
+      
+
+      .dark .menu-content {
+        background: #2d2d2d;
       }
 
       .menu-dropdown a {
         display: block;
-        padding: 10px;
+        padding: 14px 20px;
+        color: #333;
         text-decoration: none;
-        color: black;
-      }
-
-      .menu-dropdown a:hover {
-        background: #f5f5f5;
-      }
-
-      .dark .menu-dropdown {
-        background: #2a2a2a;
+        transition: all 0.2s;
+        border-bottom: 1px solid #f0f0f0;
       }
 
       .dark .menu-dropdown a {
         color: white;
+        border-bottom-color: #404040;
+      }
+
+      .menu-dropdown a:hover {
+        background: #f5f5f5;
+        color: #667eea;
       }
 
       .dark .menu-dropdown a:hover {
-        background: #3a3a3a;
+        background: #404040;
+        color: #4facfe;
       }
+
+      /* AI loading spinner */
+      .ai-loading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #666;
+      }
+
+      .ai-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #e0e0e0;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      /* 🤖 AI Direct Answer Box */
+      .direct-answer-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0;
+        margin-top: 20px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+
+      .dark .direct-answer-box {
+        background: #2d2d2d;
+        border-color: #404040;
+      }
+
+      .direct-answer-header {
+        background: #ffffff;
+        padding: 12px 20px;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .dark .direct-answer-header {
+        background: #2d2d2d;
+        border-bottom-color: #404040;
+      }
+
+      .ai-badge {
+        background: #667eea;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+      }
+
+      .direct-answer-content {
+        padding: 20px;
+        color: #333;
+      }
+
+      .dark .direct-answer-content {
+        color: #ddd;
+      }
+
+      .direct-answer-content p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      /* 💡 Follow-up Questions */
+      .follow-up-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0;
+        margin-top: 20px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+
+      .dark .follow-up-box {
+        background: #2d2d2d;
+        border-color: #404040;
+      }
+
+      .follow-up-header {
+        background: #ffffff;
+        padding: 14px 20px;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .dark .follow-up-header {
+        background: #2d2d2d;
+        border-bottom-color: #404040;
+      }
+
+      .follow-up-title {
+        font-weight: 600;
+        color: #667eea;
+        font-size: 14px;
+      }
+
+      .dark .follow-up-title {
+        color: #4facfe;
+      }
+
+      #followUpQuestions {
+        padding: 10px 0;
+      }
+
+      .follow-up-item {
+        padding: 14px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #333;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .follow-up-item:hover {
+        background: #f0f0f0;
+        color: #667eea;
+      }
+
+      .dark .follow-up-item {
+        color: rgba(255,255,255,0.9);
+      }
+
+      .dark .follow-up-item:hover {
+        background: #404040;
+        color: #4facfe;
+      }
+
+      .follow-up-item::before {
+        content: "→ ";
+        color: #667eea;
+        margin-right: 8px;
+      }
+
+      .dark .follow-up-item::before {
+        color: #4facfe;
+      }
+
+      /* 📝 Summarize Button */
+      .summarize-btn {
+        background: #f0f0f0;
+        color: #666;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s;
+        font-weight: 500;
+      }
+
+      .summarize-btn:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      .dark .summarize-btn {
+        background: #404040;
+        color: rgba(255,255,255,0.8);
+      }
+
+      .dark .summarize-btn:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      /* Summary Modal */
+      .summary-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .summary-modal.show {
+        display: flex;
+      }
+
+      .summary-content {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      }
+
+      .dark .summary-content {
+        background: #2d2d2d;
+        color: white;
+      }
+
+      .summary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .summary-header h3 {
+        margin: 0;
+        color: #667eea;
+      }
+
+      .dark .summary-header h3 {
+        color: #4facfe;
+      }
+
+      .summary-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #999;
+        line-height: 1;
+      }
+
+      .summary-close:hover {
+        color: #333;
+      }
+
+      .summary-text {
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .dark .summary-text {
+        color: rgba(255,255,255,0.9);
+      }
+
     </style>
   </head>
 
   <body class="light">
-    <button class="toggle" onclick="toggleTheme()">🌙</button>
+    <button class="toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
 
     <div class="container">
+      <!-- User Menu -->
       <div
         style="
           position: absolute;
@@ -417,101 +916,78 @@
           right: 20px;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           background: white;
-          padding: 8px 12px;
-          border-radius: 20px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          padding: 8px 16px;
+          border-radius: 30px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         "
       >
-        <!-- 🔝 Top Right User Menu -->
-        <div
-          style="
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          "
-        >
-          <img
-            src="{{ user.picture }}"
-            style="width: 30px; height: 30px; border-radius: 50%"
-          />
+        <img
+          src="{{ user.picture }}"
+          style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #667eea;"
+        />
 
-          <a href="/profile" style="text-decoration: none; color: inherit">
-            {{ user.name }}
-          </a>
+        <a href="/profile" style="text-decoration: none; color: #333; font-weight: 500;">
+          {{ user.name }}
+        </a>
 
-          <!-- 🍔 Hamburger -->
-          <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
 
-          <!-- Dropdown -->
-          <div id="menuDropdown" class="menu-dropdown">
+        <div class="menu-dropdown">
+          <div id="menuContent" class="menu-content" style="display: none;">
             <a href="/profile">👤 Profile</a>
             <a href="/settings">⚙️ Settings</a>
-            <a href="/logout" style="color: red">🚪 Logout</a>
+            <a href="/logout" style="color: #f5576c;">🚪 Logout</a>
           </div>
         </div>
-        <!-- <a href="/logout" style="margin-left:10px; color:red;">Logout</a> -->
       </div>
-      <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2644619789277551"
-     crossorigin="anonymous"></script> -->
-      <!-- Ads -->
-      <!-- <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2644619789277551"
-     data-ad-slot="7142805687"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> -->
+
       <h1>🔍 Smart Search</h1>
+      <p class="subtitle">Discover answers with AI-powered search</p>
 
       <div class="search-box">
         <input
           id="searchInput"
-          placeholder="Search..."
+          placeholder="What are you looking for?"
           oninput="handleInput()"
           onfocus="showHistoryDropdown()"
         />
         <button class="mic-btn" id="micBtn" onclick="startVoice()">🎤</button>
-        <button onclick="manualSearch()">Search</button>
+        <button class="search-btn" onclick="manualSearch()">🔍 Search</button>
         <div id="suggestions" class="suggestions"></div>
         <div id="history" class="history"></div>
       </div>
-      <!-- <ul id="results"></ul> -->
+
       <!-- Tabs -->
       <div class="tabs">
-        <span id="tab-all" class="active" onclick="changeTab('all')">All</span>
-        <span id="tab-images" onclick="changeTab('images')">Images</span>
-        <span id="tab-videos" onclick="changeTab('videos')">Videos</span>
+        <span id="tab-all" class="active" onclick="changeTab('all')">🌐 All</span>
+        <span id="tab-images" onclick="changeTab('images')">🖼️ Images</span>
+        <span id="tab-videos" onclick="changeTab('videos')">🎬 Videos</span>
       </div>
 
       <div class="spinner" id="spinner"><div></div></div>
 
-      <div
-        id="aiBox"
-        style="
-          display: none;
-          background: #eef3ff;
-          padding: 15px;
-          border-radius: 12px;
-          margin-top: 20px;
-        "
-      >
-        <h3>🧠 AI Answer</h3>
-        <p id="aiText">Loading AI answer...</p>
-        <p id="aiText"></p>
+      <!-- 🤖 AI Direct Answer Card (Only for web search) -->
+      <div id="directAnswerBox" class="direct-answer-box" style="display: none;">
+        <div class="direct-answer-header">
+          <span class="ai-badge">✨ AI Direct Answer</span>
+        </div>
+        <div class="direct-answer-content">
+          <p id="directAnswerText"></p>
+        </div>
       </div>
 
-      <div class="results" id="results"></div>
+      
+    <!-- 💡 People Also Ask Box -->
+    <div id="followUpBox" class="follow-up-box" style="display: none;">
+      <div class="follow-up-header">
+        <span class="follow-up-title">💡 People also ask</span>
+      </div>
+      <div id="followUpQuestions"></div>
+    </div>
+
+    <div class="results" id="results"></div>
     </div>
 
     <script>
@@ -521,13 +997,37 @@
       function toggleTheme() {
         document.body.classList.toggle("dark");
         document.body.classList.toggle("light");
+        const themeToggle = document.getElementById("themeToggle");
+        if (document.body.classList.contains("dark")) {
+          themeToggle.textContent = "☀️";
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeToggle.textContent = "🌙";
+          localStorage.setItem("theme", "light");
+        }
       }
+
+      // Load saved theme
+      window.onload = function() {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark");
+          document.body.classList.remove("light");
+          document.getElementById("themeToggle").textContent = "☀️";
+        }
+      };
 
       function handleInput() {
         const query = document.getElementById("searchInput").value;
         clearTimeout(timeout);
 
-        if (!query) return;
+        // Hide history when typing
+        document.getElementById("history").classList.remove("show");
+
+        if (!query) {
+          document.getElementById("suggestions").innerHTML = "";
+          return;
+        }
 
         timeout = setTimeout(() => {
           fetch(`/api/suggest?q=${query}`)
@@ -535,7 +1035,7 @@
             .then((data) => {
               let html = "";
               data.forEach((s) => {
-                html += `<div onclick="selectSuggestion('${s}')">${s}</div>`;
+                html += `<div onclick="selectSuggestion('${s}')">🔹 ${s}</div>`;
               });
               document.getElementById("suggestions").innerHTML = html;
             });
@@ -546,8 +1046,43 @@
         const query = document.getElementById("searchInput").value;
         if (!query) return;
 
+        // Hide history and suggestions dropdowns
+        document.getElementById("history").classList.remove("show");
+        document.getElementById("suggestions").innerHTML = "";
+
+        // Reset AI boxes (only for web search)
+        document.getElementById("directAnswerBox").style.display = "none";
+        document.getElementById("followUpBox").style.display = "none";
         document.getElementById("spinner").style.display = "block";
 
+        // Only show AI features for web search (not images/videos)
+        if (currentType === "all") {
+          // Get Direct Answer
+          fetch(`/api/direct-answer?q=${encodeURIComponent(query)}`)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.has_answer) {
+                document.getElementById("directAnswerBox").style.display = "block";
+                document.getElementById("directAnswerText").innerText = data.answer;
+              }
+            });
+
+          // Get Follow-up Questions (People also ask)
+          fetch(`/api/follow-up?q=${encodeURIComponent(query)}`)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.questions && data.questions.length > 0) {
+                document.getElementById("followUpBox").style.display = "block";
+                let html = "";
+                data.questions.forEach((q) => {
+                  html += `<div class="follow-up-item" onclick="searchFollowUp('${q.replace(/'/g, "\\'")}')">${q}</div>`;
+                });
+                document.getElementById("followUpQuestions").innerHTML = html;
+              }
+            });
+        }
+
+        // Get Search Results
         fetch(`/api/search?q=${query}&type=${currentType}`)
           .then((res) => res.json())
           .then((data) => {
@@ -572,10 +1107,7 @@
             <a href="${item.url}" target="_blank" class="result-title">
                 ${item.title}
             </a>
-
-            <button class="fav-btn" onclick="addFavorite('${item.title}', '${item.url}', this)">
-                ☆
-            </button>
+            <button class="fav-btn" onclick="addFavorite('${item.title.replace(/'/g, "\\'")}', '${item.url}', this)">☆</button>
         </div>
                         <p>${item.content || ""}</p>
                     </div>
@@ -590,12 +1122,10 @@
             <a href="${item.url}" target="_blank" class="result-title">
                 ${item.title}
             </a>
-
-            <button class="fav-btn" onclick="addFavorite('${item.title}', '${item.url}', this)">
-                ☆
-            </button>
+            <button class="fav-btn" onclick="addFavorite('${item.title.replace(/'/g, "\\'")}', '${item.url}', this)">☆</button>
         </div>
                         <p>${item.content || ""}</p>
+                        <button class="summarize-btn" onclick="summarizeUrl('${item.url}')">📝 Summarize this page</button>
                     </div>
                 `;
               });
@@ -605,8 +1135,38 @@
             document.getElementById("spinner").style.display = "none";
           });
 
-        document.getElementById("suggestions").innerHTML = "";
         saveHistory(query);
+      }
+
+      function searchFollowUp(question) {
+        document.getElementById("searchInput").value = question;
+        manualSearch();
+      }
+
+      function summarizeUrl(url) {
+        // Show modal
+        const modal = document.getElementById("summaryModal");
+        modal.classList.add("show");
+        document.getElementById("summaryText").innerHTML = `
+          <div class="ai-loading">
+            <div class="ai-spinner"></div>
+            <span>Summarizing page...</span>
+          </div>
+        `;
+
+        fetch(`/api/summarize?url=${encodeURIComponent(url)}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              document.getElementById("summaryText").innerText = data.summary;
+            } else {
+              document.getElementById("summaryText").innerText = data.summary;
+            }
+          });
+      }
+
+      function closeSummaryModal() {
+        document.getElementById("summaryModal").classList.remove("show");
       }
 
       function changeTab(type) {
@@ -649,7 +1209,7 @@
           return;
         }
 
-        let html = `<div class="history-header">Recent searches</div>`;
+        let html = `<div class="history-header">📜 Recent searches</div>`;
         history.forEach((h, index) => {
           const timeAgo = getTimeAgo(h.timestamp);
           html += `
@@ -657,7 +1217,7 @@
               /'/g,
               "\\'"
             )}')">
-                <span class="history-icon">🕒</span>
+                <span class="history-icon">🔍</span>
                 <div class="history-content">
                     <span class="history-text">${h.query}</span>
                     <span class="history-time">${timeAgo}</span>
@@ -666,7 +1226,7 @@
             </div>
         `;
         });
-        html += `<div class="history-clear" onclick="clearHistory()">Clear all</div>`;
+        html += `<div class="history-clear" onclick="clearHistory()">🗑️ Clear all</div>`;
 
         historyDiv.innerHTML = html;
       }
@@ -689,18 +1249,17 @@
 
       function showHistoryDropdown() {
         const history = JSON.parse(localStorage.getItem("history")) || [];
-        if (history.length > 0) {
-          const input = document.getElementById("searchInput").value;
-          if (!input) {
-            showHistory();
-            document.getElementById("history").classList.add("show");
-          }
+        const input = document.getElementById("searchInput").value;
+        if (history.length > 0 && !input) {
+          showHistory();
+          document.getElementById("history").classList.add("show");
         }
       }
 
       function selectHistory(text) {
         document.getElementById("searchInput").value = text;
         document.getElementById("history").classList.remove("show");
+        document.getElementById("suggestions").innerHTML = "";
         manualSearch();
       }
 
@@ -708,19 +1267,18 @@
         let history = JSON.parse(localStorage.getItem("history")) || [];
         history.splice(index, 1);
         localStorage.setItem("history", JSON.stringify(history));
-        showHistory();
+        if (history.length > 0) {
+          showHistory();
+        } else {
+          document.getElementById("history").classList.remove("show");
+          document.getElementById("history").innerHTML = "";
+        }
       }
 
       function clearHistory() {
         localStorage.removeItem("history");
         document.getElementById("history").classList.remove("show");
         document.getElementById("history").innerHTML = "";
-      }
-
-      function selectHistory(text) {
-        document.getElementById("searchInput").value = text;
-        document.getElementById("history").classList.remove("show");
-        manualSearch();
       }
 
       // Close history when clicking outside
@@ -790,129 +1348,37 @@
         window.speechSynthesis.speak(speech);
       }
 
+      // Old search function - kept for compatibility
       function search() {
-        const query = document.getElementById("searchInput").value;
-
-        fetch("http://127.0.0.1:5000/search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            const resultsList = document.getElementById("results");
-            resultsList.innerHTML = "";
-
-            data.results.forEach((item) => {
-              const li = document.createElement("li");
-              li.textContent = item;
-              resultsList.appendChild(li);
-            });
-          });
-      }
-
-      function manualSearch() {
-        const query = document.getElementById("searchInput").value;
-        if (!query) return;
-
-        document.getElementById("spinner").style.display = "block";
-
-        // 🔥 AI SUMMARY CALL
-        fetch(`/api/ai-summary?q=${encodeURIComponent(query)}`)
-          .then((res) => res.json())
-          .then((data) => {
-            document.getElementById("aiBox").style.display = "block";
-            document.getElementById("aiText").innerText = data.answer;
-          });
-
-        // 🔍 NORMAL SEARCH
-        document.getElementById("aiBox").style.display = "block";
-        document.getElementById("aiText").innerText =
-          "⏳ Generating AI answer...";
-        fetch(`/api/search?q=${query}&type=${currentType}`)
-          .then((res) => res.json())
-          .then((data) => {
-            let html = "";
-
-            if (currentType === "images") {
-              html += `<div class="image-grid">`;
-              data.forEach((item) => {
-                html += `<div class="img-card"><img src="${item.image}"></div>`;
-              });
-              html += `</div>`;
-            } else if (currentType === "videos") {
-              html += `<div class="video-grid">`;
-              data.forEach((item) => {
-                html += `
-                    <div class="video-card">
-                        <div class="video-thumb">
-                            <img src="${item.thumbnail}" />
-                            <div class="play-btn">▶</div>
-                        </div>
-                        <div class="result-header">
-            <a href="${item.url}" target="_blank" class="result-title">
-                ${item.title}
-            </a>
-
-            <button class="fav-btn" onclick="addFavorite('${item.title}', '${item.url}', this)">
-                ☆
-            </button>
-        </div>
-                        <p>${item.content || ""}</p>
-                    </div>
-                `;
-              });
-              html += `</div>`;
-            } else {
-              data.forEach((item) => {
-                html += `
-                    <div class="result">
-                        <div class="result-header">
-            <a href="${item.url}" target="_blank" class="result-title">
-                ${item.title}
-            </a>
-
-            <button class="fav-btn" onclick="addFavorite('${item.title}', '${item.url}', this)">
-                ☆
-            </button>
-        </div>
-                        <p>${item.content || ""}</p>
-                    </div>
-                `;
-              });
-            }
-
-            document.getElementById("results").innerHTML = html;
-            document.getElementById("spinner").style.display = "none";
-          });
-
-        document.getElementById("suggestions").innerHTML = "";
-        saveHistory(query);
+        manualSearch();
       }
 
       document.getElementById("aiText").innerHTML = `
     <div class="ai-loading">
         <div class="ai-spinner"></div>
-        Generating AI answer...
+        <span>Generating AI answer...</span>
     </div>
 `;
 
       function toggleMenu() {
-        const menu = document.getElementById("menuDropdown");
-        menu.style.display = menu.style.display === "block" ? "none" : "block";
+        const menu = document.getElementById("menuContent");
+        if (menu.style.display === "none" || menu.style.display === "") {
+          menu.style.display = "block";
+        } else {
+          menu.style.display = "none";
+        }
       }
 
-      // Close when clicking outside
-      document.addEventListener("click", function (e) {
-        const menu = document.getElementById("menuDropdown");
+      // Close menu when clicking outside
+      document.addEventListener("click", function(e) {
+        const menu = document.getElementById("menuContent");
         const hamburger = document.querySelector(".hamburger");
-
         if (!hamburger.contains(e.target) && !menu.contains(e.target)) {
           menu.style.display = "none";
         }
       });
+
+      
 
       function addFavorite(title, url, btn) {
     fetch('/api/favorite', {
@@ -936,5 +1402,16 @@ function deleteFavorite(id) {
 
 loadFavorites();
     </script>
-  </body>
+  
+    <!-- Summary Modal -->
+    <div id="summaryModal" class="summary-modal">
+      <div class="summary-content">
+        <div class="summary-header">
+          <h3>📝 Page Summary</h3>
+          <button class="summary-close" onclick="closeSummaryModal()">&times;</button>
+        </div>
+        <div id="summaryText" class="summary-text"></div>
+      </div>
+    </div>
+</body>
 </html>
