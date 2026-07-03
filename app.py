@@ -575,5 +575,238 @@ def search_count():
 
     return jsonify({"count": count})
 # ================== 🚀 RUN ==================
+
+
+# 🤖 AI Expert Chat
+@app.route("/api/chat", methods=["GET"])
+def ai_chat():
+    query = request.args.get("q", "")
+    message = request.args.get("message", "")
+    
+    if not message:
+        return jsonify({"error": "No message provided"})
+    
+    # Build context-aware prompt
+    prompt = f"""You are an AI expert assistant helping with search topic: "{query}"
+    
+User question: {message}
+
+Provide a helpful, conversational response that:
+- Answers the question directly
+- Uses examples when helpful
+- Stays relevant to the search topic
+- Is friendly and easy to understand
+
+Response:"""
+    
+    # Try Groq first
+    groq_key = os.getenv("GROQ_API_KEY")
+    if groq_key:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {groq_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.1-8b-instant",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.7,
+                    "max_tokens": 500
+                },
+                timeout=30
+            )
+            if response.status_code == 200:
+                result = response.json()
+                return jsonify({
+                    "success": True,
+                    "response": result["choices"][0]["message"]["content"]
+                })
+        except:
+            pass
+    
+    # Try OpenAI fallback
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key:
+        try:
+            response = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {openai_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "gpt-3.5-turbo",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.7,
+                    "max_tokens": 500
+                },
+                timeout=30
+            )
+            if response.status_code == 200:
+                result = response.json()
+                return jsonify({
+                    "success": True,
+                    "response": result["choices"][0]["message"]["content"]
+                })
+        except:
+            pass
+    
+    return jsonify({
+        "success": False,
+        "response": "AI chat is currently unavailable. Please try again later."
+    })
+
+
+
+
+# 🤖 AI Expert Chat Page
+@app.route("/ai-chat")
+def ai_chat_page():
+    topic = request.args.get("topic", "Search")
+    return render_template("ai-chat.html", topic=topic)
+
+
+
+
+# ⚽ Sports Scores API
+@app.route("/api/sports", methods=["GET"])
+def get_sports_scores():
+    query = request.args.get("q", "").lower()
+    
+    sports_keywords = ["football", "soccer", "cricket", "basketball", "tennis", "nba", "nfl", "ipl", "world cup"]
+    
+    if any(keyword in query for keyword in sports_keywords):
+        # Return sample sports data (in production, integrate with sports API)
+        return jsonify({
+            "found": True,
+            "matches": [
+                {"league": "Premier League", "home": "Arsenal", "away": "Liverpool", "home_score": 2, "away_score": 1, "status": "FT", "time": "Full Time"},
+                {"league": "La Liga", "home": "Real Madrid", "away": "Barcelona", "home_score": 3, "away_score": 2, "status": "FT", "time": "Full Time"},
+                {"league": "IPL 2024", "home": "MI", "away": "CSK", "home_score": 185, "away_score": 178, "status": "FT", "time": "Match Over"},
+                {"league": "NBA", "home": "Lakers", "away": "Celtics", "home_score": 108, "away_score": 112, "status": "FT", "time": "Final"},
+            ]
+        })
+    
+    return jsonify({"found": False})
+
+
+# 💼 Job Finder API - Real Web Search
+@app.route("/api/jobs", methods=["GET"])
+def get_jobs():
+    query = request.args.get("q", "")
+    location = request.args.get("location", "")
+    
+    if not query:
+        return jsonify({"found": False, "jobs": []})
+    
+    jobs = []
+    
+    try:
+        # Search Indeed
+        import requests
+        from bs4 import BeautifulSoup
+        
+        # Indeed job search
+        indeed_url = f"https://www.indeed.com/jobs?q={quote(query)}&l={quote(location) if location else 'Remote'}"
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            resp = requests.get(indeed_url, headers=headers, timeout=10)
+            soup = BeautifulSoup(resp.text, 'html.parser')
+            
+            job_cards = soup.select('.job_seen_beacon')[:5]
+            for card in job_cards:
+                title_elem = card.select_one('.jobTitle span, .jobTitle')
+                company_elem = card.select_one('.companyName')
+                location_elem = card.select_one('.companyLocation')
+                salary_elem = card.select_one('.salaryInfo span')
+                
+                if title_elem:
+                    job_title = title_elem.get_text(strip=True)
+                    company_name = company_elem.get_text(strip=True) if company_elem else "Hiring Company"
+                    job_location = location_elem.get_text(strip=True) if location_elem else location or "Remote"
+                    salary = salary_elem.get_text(strip=True) if salary_elem else "Salary not specified"
+                    
+                    # Get job link
+                    link_elem = card.select_one('a')
+                    job_link = "https://www.indeed.com" + link_elem['href'] if link_elem and 'href' in link_elem.attrs else indeed_url
+                    
+                    jobs.append({
+                        "title": job_title,
+                        "company": company_name,
+                        "location": job_location,
+                        "salary": salary,
+                        "type": "Full-time",
+                        "source": "Indeed",
+                        "url": job_link
+                    })
+        except Exception as e:
+            print(f"Indeed error: {e}")
+        
+        # Search RemoteOK
+        try:
+            remote_url = f"https://remoteok.com/remote-{query.replace(' ', '-')}-jobs"
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            resp = requests.get(remote_url, headers=headers, timeout=10)
+            soup = BeautifulSoup(resp.text, 'html.parser')
+            
+            job_rows = soup.select('tr.job')[1:6]  # Skip header row
+            for row in job_rows:
+                title_elem = row.select_one('td.company a h2, td h2 a')
+                company_elem = row.select_one('td.company a')
+                
+                if title_elem:
+                    job_title = title_elem.get_text(strip=True)
+                    company_name = company_elem.get_text(strip=True) if company_elem else "Remote Company"
+                    
+                    # Get salary
+                    salary_elem = row.select_one('td.salary')
+                    salary = salary_elem.get_text(strip=True) if salary_elem else "Remote"
+                    
+                    # Get link
+                    link_elem = row.select_one('td.title a')
+                    job_link = "https://remoteok.com" + link_elem['href'] if link_elem and 'href' in link_elem.attrs else remote_url
+                    
+                    jobs.append({
+                        "title": job_title,
+                        "company": company_name,
+                        "location": "Remote",
+                        "salary": salary.replace('$', '').strip() if salary else "Competitive",
+                        "type": "Remote",
+                        "source": "RemoteOK",
+                        "url": job_link
+                    })
+        except Exception as e:
+            print(f"RemoteOK error: {e}")
+            
+    except ImportError:
+        # Fallback if requests/bs4 not available
+        pass
+    
+    # If no real jobs found, return sample data
+    if not jobs:
+        sample_jobs = [
+            {"title": f"Senior {query}", "company": "Tech Corp", "location": location or "Remote", "salary": "$120k - $180k", "type": "Full-time", "source": "Sample", "url": f"https://www.indeed.com/jobs?q={quote(query)}"},
+            {"title": f"{query} Engineer", "company": "StartupXYZ", "location": "San Francisco", "salary": "$100k - $150k", "type": "Full-time", "source": "Sample", "url": f"https://www.linkedin.com/jobs/search/?keywords={quote(query)}"},
+            {"title": f"Junior {query}", "company": "Web Solutions", "location": "Remote", "salary": "$60k - $90k", "type": "Contract", "source": "Sample", "url": f"https://www.glassdoor.com/Job/jobs.htm?sc.keyword={quote(query)}"},
+        ]
+        return jsonify({
+            "found": True,
+            "query": query,
+            "jobs": sample_jobs,
+            "total": len(sample_jobs),
+            "source": "sample"
+        })
+    
+    return jsonify({
+        "found": True,
+        "query": query,
+        "jobs": jobs[:10],  # Limit to 10 jobs
+        "total": len(jobs)
+    })
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

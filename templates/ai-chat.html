@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Expert Chat - Smart Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Poppins,sans-serif;min-height:100vh;transition:.3s}
+        .light{background:#fff;color:#333}
+        .dark{background:#1a1a2e;color:#fff}
+        .navbar{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+        .dark .navbar{background:#1a1a1a}
+        .nav-brand{font-size:22px;font-weight:700;color:#667eea;text-decoration:none}
+        .nav-right{display:flex;align-items:center;gap:15px}
+        .nav-links{display:flex;gap:20px}
+        .nav-links a{color:#666;text-decoration:none;font-weight:500}
+        .nav-links a:hover{color:#667eea}
+        .dark .nav-links a{color:rgba(255,255,255,.7)}
+        .theme-toggle{width:44px;height:44px;border-radius:50%;border:none;background:#f0f0f0;font-size:20px;cursor:pointer}
+        .dark .theme-toggle{background:#2d2d2d}
+        .chat-container{max-width:800px;margin:40px auto;padding:0 20px}
+        .topic-header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:30px;border-radius:20px;margin-bottom:30px;text-align:center}
+        .topic-label{font-size:14px;opacity:.9;margin-bottom:5px}
+        .topic-title{font-size:28px;font-weight:700;margin-bottom:10px}
+        .topic-actions{display:flex;gap:10px;justify-content:center;margin-top:15px}
+        .new-search-btn{padding:10px 20px;background:rgba(255,255,255,.2);border:2px solid #fff;color:#fff;border-radius:25px;text-decoration:none;font-weight:500;transition:all .3s}
+        .new-search-btn:hover{background:#fff;color:#667eea}
+        .chat-box{background:#fff;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,.08);overflow:hidden}
+        .dark .chat-box{background:#2d2d2d}
+        .chat-messages{padding:20px;max-height:400px;overflow-y:auto}
+        .message{margin-bottom:20px;animation:fadeIn .3s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .message.user{text-align:right}
+        .message-content{display:inline-block;padding:15px 20px;border-radius:15px;line-height:1.6;max-width:85%;text-align:left}
+        .message.user .message-content{background:#667eea;color:#fff;border-bottom-right-radius:5px}
+        .message.ai .message-content{background:#f0f0f0;color:#333;border-bottom-left-radius:5px}
+        .dark .message.ai .message-content{background:#404040;color:rgba(255,255,255,.9)}
+        .message-label{font-size:12px;margin-bottom:5px;color:#888;padding:0 10px}
+        .message.user .message-label{text-align:right}
+        .suggestions{padding:15px 20px;border-top:1px solid #eee;background:#fafafa}
+        .dark .suggestions{background:#252525;border-color:#404040}
+        .suggestions-label{font-size:12px;color:#888;margin-bottom:10px}
+        .suggestion-btns{display:flex;flex-wrap:wrap;gap:8px}
+        .suggestion-btn{padding:8px 16px;background:#f0f0f0;border:none;border-radius:20px;font-size:13px;cursor:pointer;color:#666;transition:all .2s}
+        .suggestion-btn:hover{background:#667eea;color:#fff}
+        .dark .suggestion-btn{background:#404040;color:#ccc}
+        .dark .suggestion-btn:hover{background:#667eea;color:#fff}
+        .chat-input-area{display:flex;gap:10px;padding:20px;border-top:1px solid #eee}
+        .dark .chat-input-area{border-color:#404040}
+        .chat-input{flex:1;padding:15px 20px;border:2px solid #e0e0e0;border-radius:25px;font-size:15px;font-family:inherit;outline:none}
+        .chat-input:focus{border-color:#667eea}
+        .dark .chat-input{background:#2d2d2d;border-color:#404040;color:#fff}
+        .send-btn{padding:15px 25px;background:#667eea;color:#fff;border:none;border-radius:25px;font-size:15px;font-weight:600;cursor:pointer;transition:all .3s}
+        .send-btn:hover{background:#764ba2;transform:scale(1.05)}
+        .loading{text-align:center;padding:20px}
+        .loading-dot{display:inline-block;width:10px;height:10px;background:#667eea;border-radius:50%;animation:bounce 1.4s infinite ease-in-out both}
+        .loading-dot:nth-child(1){animation-delay:-.32s}
+        .loading-dot:nth-child(2){animation-delay:-.16s}
+        @keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+    </style>
+</head>
+<body class="light">
+    <nav class="navbar">
+        <a href="/" class="nav-brand">Smart Search</a>
+        <div class="nav-right">
+            <div class="nav-links"><a href="/">Search</a><a href="/profile">Profile</a></div>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle"></button>
+        </div>
+    </nav>
+    <div class="chat-container">
+        <div class="topic-header">
+            <div class="topic-label">Chatting about</div>
+            <div class="topic-title" id="topicTitle">Loading...</div>
+            <div class="topic-actions"><a href="/" class="new-search-btn">New Search</a></div>
+        </div>
+        <div class="chat-box">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-label">AI Expert</div>
+                    <div class="message-content">Hello! I'm your AI expert assistant. Ask me anything about your search topic!</div>
+                </div>
+            </div>
+            <div class="suggestions">
+                <div class="suggestions-label">Try asking:</div>
+                <div class="suggestion-btns">
+                    <button class="suggestion-btn" onclick="askQuestion('Tell me more about this topic')">Tell me more</button>
+                    <button class="suggestion-btn" onclick="askQuestion('Explain this in simpler terms')">Simpler terms</button>
+                    <button class="suggestion-btn" onclick="askQuestion('Give me some examples')">Give examples</button>
+                    <button class="suggestion-btn" onclick="askQuestion('What are the pros and cons?')">Pros & cons</button>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Ask a follow-up question..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const urlParams=new URLSearchParams(window.location.search);
+        const topic=urlParams.get('topic')||'your search topic';
+        document.getElementById('topicTitle').textContent=topic;
+        if(localStorage.getItem('theme')==='dark'){document.body.classList.remove('light');document.body.classList.add('dark');document.getElementById('themeToggle').textContent=''}
+        function toggleTheme(){document.body.classList.toggle('dark');document.body.classList.toggle('light');const t=document.getElementById('themeToggle');if(document.body.classList.contains('dark')){t.textContent='';localStorage.setItem('theme','dark')}else{t.textContent='';localStorage.setItem('theme','light')}}
+        function addMessage(content,isUser=false){const c=document.getElementById('chatMessages');const m=document.createElement('div');m.className='message '+(isUser?'user':'ai');m.innerHTML='<div class="message-label">'+(isUser?'You':'AI Expert')+'</div><div class="message-content">'+content.replace(/\n/g,'<br>')+'</div>';c.appendChild(m);c.scrollTop=c.scrollHeight}
+        function showLoading(){const c=document.getElementById('chatMessages');const l=document.createElement('div');l.id='loading';l.className='message ai';l.innerHTML='<div class="message-label">AI Expert</div><div class="message-content"><div class="loading"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div></div>';c.appendChild(l);c.scrollTop=c.scrollHeight}
+        function hideLoading(){const l=document.getElementById('loading');if(l)l.remove()}
+        function askQuestion(q){document.getElementById('chatInput').value=q;sendMessage()}
+        function sendMessage(){const i=document.getElementById('chatInput');const m=i.value.trim();if(!m)return;addMessage(m,true);i.value='';showLoading();fetch('/api/chat?q='+encodeURIComponent(topic)+'&message='+encodeURIComponent(m)).then(r=>r.json()).then(d=>{hideLoading();if(d.success){addMessage(d.response)}else{addMessage('Sorry, I could not answer that.')}}).catch(()=>{hideLoading();addMessage('Sorry, something went wrong.')})}
+    </script>
+</body>
+</html>

@@ -408,16 +408,17 @@
         background: #404040;
       }
 
-      /* History dropdown */
+      /* Recent Searches dropdown */
       .history {
         position: absolute;
         top: 100%;
         left: 0;
         width: 100%;
+        max-width: 600px;
         background: white;
         border-radius: 16px;
-        margin-top: 8px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        margin-top: 10px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         z-index: 100;
         display: none;
         overflow: hidden;
@@ -425,6 +426,12 @@
 
       .history.show {
         display: block;
+        animation: slideDown 0.2s ease;
+      }
+
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .dark .history {
@@ -432,56 +439,125 @@
       }
 
       .history-header {
-        padding: 12px 20px;
-        font-size: 12px;
-        color: #999;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 16px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #667eea;
+        border-bottom: 1px solid #eee;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
       }
 
       .dark .history-header {
-        color: #666;
+        color: #4facfe;
+        background: linear-gradient(135deg, #2d2d2d 0%, #252525 100%);
         border-bottom-color: #404040;
-      }
-
-      .history-item {
-        padding: 14px 20px;
-        cursor: pointer;
-        transition: all 0.2s;
-        color: #333;
-        border-bottom: 1px solid #f0f0f0;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .dark .history-item {
-        color: white;
-        border-bottom-color: #404040;
-      }
-
-      .history-item:hover {
-        background: #f5f5f5;
-      }
-
-      .dark .history-item:hover {
-        background: #404040;
-      }
-
-      .history-item span:first-child {
-        opacity: 0.5;
       }
 
       .history-clear {
-        color: #f5576c;
+        color: #dc3545;
         cursor: pointer;
         font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 12px;
+        transition: all 0.2s;
       }
 
       .history-clear:hover {
-        text-decoration: underline;
+        background: #ffebee;
+      }
+
+      .history-list {
+        max-height: 350px;
+        overflow-y: auto;
+        padding: 8px 0;
+      }
+
+      .history-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 1px solid #f5f5f5;
+      }
+
+      .history-item:last-child {
+        border-bottom: none;
+      }
+
+      .dark .history-item {
+        color: rgba(255,255,255,0.9);
+        border-bottom-color: #333;
+      }
+
+      .history-item:hover {
+        background: linear-gradient(90deg, #f8f9fa 0%, #fff 100%);
+      }
+
+      .dark .history-item:hover {
+        background: linear-gradient(90deg, #3a3a3a 0%, #2d2d2d 100%);
+      }
+
+      .history-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .history-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .history-query {
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .history-time {
+        font-size: 11px;
+        color: #999;
+      }
+
+      .dark .history-time {
+        color: #666;
+      }
+
+      .history-delete {
+        opacity: 0;
+        background: none;
+        border: none;
+        font-size: 16px;
+        color: #ccc;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: all 0.2s;
+      }
+
+      .history-item:hover .history-delete {
+        opacity: 1;
+      }
+
+      .history-delete:hover {
+        background: #ffebee;
+        color: #dc3545;
       }
 
       /* Navbar */
@@ -695,6 +771,10 @@
         background: #ffffff;
         padding: 12px 20px;
         border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
       }
 
       .dark .direct-answer-header {
@@ -901,6 +981,290 @@
         color: rgba(255,255,255,0.9);
       }
 
+
+      /* 🤖 AI Expert Chat */
+      .ai-chat-box {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 0;
+        margin-top: 20px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+
+      .dark .ai-chat-box {
+        background: #2d2d2d;
+        border-color: #404040;
+      }
+
+      .ai-chat-header {
+        background: #ffffff;
+        padding: 14px 20px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .dark .ai-chat-header {
+        background: #2d2d2d;
+        border-bottom-color: #404040;
+      }
+
+      .ai-chat-title {
+        font-weight: 600;
+        color: #667eea;
+        font-size: 14px;
+      }
+
+      .dark .ai-chat-title {
+        color: #4facfe;
+      }
+
+      .ai-chat-body {
+        padding: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .ai-chat-message {
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .ai-chat-message.user {
+        background: #667eea;
+        color: white;
+        margin-left: 20px;
+      }
+
+      .ai-chat-message.ai {
+        background: #f0f0f0;
+        color: #333;
+        margin-right: 20px;
+      }
+
+      .dark .ai-chat-message.ai {
+        background: #404040;
+        color: rgba(255,255,255,0.9);
+      }
+
+      .ai-chat-input-wrapper {
+        display: flex;
+        gap: 10px;
+        padding: 15px 20px;
+        border-top: 1px solid #e9ecef;
+        background: #fafafa;
+      }
+
+      .dark .ai-chat-input-wrapper {
+        background: #252525;
+        border-top-color: #404040;
+      }
+
+      .ai-chat-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 25px;
+        font-size: 14px;
+        outline: none;
+        font-family: inherit;
+      }
+
+      .ai-chat-input:focus {
+        border-color: #667eea;
+      }
+
+      .dark .ai-chat-input {
+        background: #2d2d2d;
+        border-color: #404040;
+        color: white;
+      }
+
+      .ai-chat-send {
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+      }
+
+      .ai-chat-send:hover {
+        background: #764ba2;
+      }
+
+      .ai-chat-suggestions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 10px 20px;
+        border-top: 1px solid #eee;
+      }
+
+      .dark .ai-chat-suggestions {
+        border-top-color: #404040;
+      }
+
+      .chat-suggestion-btn {
+        padding: 6px 12px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 15px;
+        font-size: 12px;
+        cursor: pointer;
+        color: #666;
+        transition: all 0.2s;
+      }
+
+      .chat-suggestion-btn:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      .dark .chat-suggestion-btn {
+        background: #404040;
+        color: #ccc;
+      }
+
+      .dark .chat-suggestion-btn:hover {
+        background: #667eea;
+        color: white;
+      }
+
+
+        .ai-chat-link-btn {
+            padding: 6px 16px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+        .ai-chat-link-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+        .dark .ai-chat-link-btn {
+            background: #4facfe;
+        }
+        .dark .ai-chat-link-btn:hover {
+            background: #667eea;
+        }
+
+
+      /* Sports Scores */
+      .sports-box {
+        background: white;
+        border-radius: 16px;
+        padding: 0;
+        margin-top: 20px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      }
+      .dark .sports-box { background: #2d2d2d; border-color: #404040; }
+      .sports-header {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sports-title { font-weight: 600; font-size: 15px; }
+      .sports-list { padding: 15px; }
+      .sports-match {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        margin-bottom: 10px;
+      }
+      .sports-match:last-child { margin-bottom: 0; }
+      .dark .sports-match { background: #3a3a3a; }
+      .match-teams { flex: 1; }
+      .match-league { font-size: 11px; color: #11998e; font-weight: 600; margin-bottom: 4px; }
+      .dark .match-league { color: #38ef7d; }
+      .match-name { font-weight: 600; font-size: 14px; }
+      .match-score { font-size: 24px; font-weight: 700; color: #333; min-width: 80px; text-align: center; }
+      .dark .match-score { color: white; }
+      .match-time { font-size: 11px; color: #888; text-align: center; }
+
+      /* Job Listings */
+      .jobs-box {
+        background: white;
+        border-radius: 16px;
+        padding: 0;
+        margin-top: 20px;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      }
+      .dark .jobs-box { background: #2d2d2d; border-color: #404040; }
+      .jobs-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .jobs-title { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+      .jobs-count { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+      .jobs-list { padding: 15px; }
+      .job-card {
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        transition: all 0.2s;
+      }
+      .job-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+      .job-card:last-child { margin-bottom: 0; }
+      .dark .job-card { background: #3a3a3a; }
+      .job-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; color: #333; }
+      .dark .job-title { color: white; }
+      .job-company { font-size: 13px; color: #667eea; margin-bottom: 8px; }
+      .job-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+      .job-tag { padding: 4px 10px; background: #e9ecef; border-radius: 20px; font-size: 11px; color: #666; }
+      .dark .job-tag { background: #505050; color: #aaa; }
+      .job-tag.salary { background: #e8f5e9; color: #2e7d32; }
+      .dark .job-tag.salary { background: #1b3a1d; color: #81c784; }
+      .job-tag.source { background: #e3f2fd; color: #1565c0; }
+      .dark .job-tag.source { background: #1a237e; color: #90caf9; }
+      .job-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .job-apply {
+        padding: 8px 14px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .job-apply.linkedin { background: #0077b5; color: white; }
+      .job-apply.linkedin:hover { background: #005582; }
+      .job-apply.indeed { background: #2164f3; color: white; }
+      .job-apply.indeed:hover { background: #0a48b3; }
+      .job-apply.glassdoor { background: #0caa91; color: white; }
+      .job-apply.glassdoor:hover { background: #089077; }
+
     </style>
   </head>
 
@@ -987,6 +1351,49 @@
       <div id="followUpQuestions"></div>
     </div>
 
+    
+    <!-- 🤖 AI Expert Chat -->
+    <div id="aiChatBox" class="ai-chat-box" style="display: none;">
+      <div class="ai-chat-header">
+        <span style="font-size: 20px;">🤖</span>
+        <span class="ai-chat-title">AI Expert Chat</span>
+      </div>
+      <div class="ai-chat-body" id="chatBody">
+        <div class="ai-chat-message ai">
+          Hello! I can help you learn more about your search topic. Ask me anything!
+        </div>
+      </div>
+      <div class="ai-chat-suggestions">
+        <button class="chat-suggestion-btn" onclick="sendChatSuggestion('Tell me more about this')">Tell me more</button>
+        <button class="chat-suggestion-btn" onclick="sendChatSuggestion('Explain in simpler terms')">Simpler terms</button>
+        <button class="chat-suggestion-btn" onclick="sendChatSuggestion('Give me examples')">Give examples</button>
+        <button class="chat-suggestion-btn" onclick="sendChatSuggestion('What are the pros and cons')">Pros & cons</button>
+      </div>
+      <div class="ai-chat-input-wrapper">
+        <input type="text" id="chatInput" class="ai-chat-input" placeholder="Ask a follow-up question..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <button class="ai-chat-send" onclick="sendChatMessage()">Send</button>
+      </div>
+    </div>
+
+    
+    <!-- Sports Scores Box -->
+    <div id="sportsBox" class="sports-box" style="display: none;">
+      <div class="sports-header">
+        <span style="font-size: 20px;">⚽</span>
+        <span class="sports-title">Live Sports Scores</span>
+      </div>
+      <div class="sports-list" id="sportsList"></div>
+    </div>
+
+    <!-- Job Listings Box -->
+    <div id="jobsBox" class="jobs-box" style="display: none;">
+      <div class="jobs-header">
+        <span class="jobs-title"><span>💼</span> Job Listings</span>
+        <span class="jobs-count" id="jobsCount">0 found</span>
+      </div>
+      <div class="jobs-list" id="jobsList"></div>
+    </div>
+
     <div class="results" id="results"></div>
     </div>
 
@@ -1053,6 +1460,8 @@
         // Reset AI boxes (only for web search)
         document.getElementById("directAnswerBox").style.display = "none";
         document.getElementById("followUpBox").style.display = "none";
+        document.getElementById("sportsBox").style.display = "none";
+        document.getElementById("jobsBox").style.display = "none";
         document.getElementById("spinner").style.display = "block";
 
         // Only show AI features for web search (not images/videos)
@@ -1064,6 +1473,17 @@
               if (data.has_answer) {
                 document.getElementById("directAnswerBox").style.display = "block";
                 document.getElementById("directAnswerText").innerText = data.answer;
+                // Add Ask More button
+                const directBox = document.getElementById("directAnswerBox");
+                const header = directBox.querySelector(".direct-answer-header");
+                if (!header.querySelector(".ai-chat-link-btn")) {
+                  const btn = document.createElement("a");
+                  btn.href = "/ai-chat?topic=" + encodeURIComponent(query);
+                  btn.className = "ai-chat-link-btn";
+                  btn.textContent = "Ask More 💬";
+                  btn.style.cssText = "display:inline-block;padding:6px 16px;background:#667eea;color:white;border-radius:20px;text-decoration:none;font-size:13px;font-weight:500;margin-left:auto;white-space:nowrap;";
+                  header.appendChild(btn);
+                }
               }
             });
 
@@ -1133,6 +1553,64 @@
 
             document.getElementById("results").innerHTML = html;
             document.getElementById("spinner").style.display = "none";
+
+            // Only show for web search
+            if (currentType === "all") {
+              // Get Sports Scores
+              fetch("/api/sports?q=" + encodeURIComponent(query))
+                .then(res => res.json())
+                .then(data => {
+                  if (data.found) {
+                    document.getElementById("sportsBox").style.display = "block";
+                    let html = "";
+                    data.matches.forEach(match => {
+                      html += "<div class='sports-match'>" +
+                        "<div class='match-teams'>" +
+                          "<div class='match-league'>" + match.league + "</div>" +
+                          "<div class='match-name'>" + match.home + " vs " + match.away + "</div>" +
+                        "</div>" +
+                        "<div class='match-score'>" + match.home_score + " - " + match.away_score + "</div>" +
+                        "<div class='match-time'>" + match.status + "<br>" + match.time + "</div>" +
+                      "</div>";
+                    });
+                    document.getElementById("sportsList").innerHTML = html;
+                  }
+                });
+
+              // Get Jobs (only if query contains job keywords)
+              const jobKeywords = ['job', 'jobs', 'hiring', 'career', 'employment', 'work', 'vacancy', 'position', 'recruit', 'openings', 'apply', 'work from home', 'wfh', 'remote work'];
+              const isJobSearch = jobKeywords.some(keyword => query.toLowerCase().includes(keyword));
+              
+              if (isJobSearch) {
+                fetch("/api/jobs?q=" + encodeURIComponent(query))
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.found) {
+                      document.getElementById("jobsBox").style.display = "block";
+                      document.getElementById("jobsCount").textContent = data.total + " found";
+                      let html = "";
+                      data.jobs.forEach(job => {
+                        html += "<div class='job-card'>" +
+                          "<div class='job-title'>" + job.title + "</div>" +
+                          "<div class='job-company'>" + job.company + "</div>" +
+                          "<div class='job-meta'>" +
+                            "<span class='job-tag'>" + job.location + "</span>" +
+                            "<span class='job-tag salary'>" + job.salary + "</span>" +
+                            "<span class='job-tag'>" + job.type + "</span>" +
+                            "<span class='job-tag source'>" + (job.source || 'Web') + "</span>" +
+                          "</div>" +
+                          "<div class='job-actions'>" +
+                            "<a href='" + job.url + "' target='_blank' class='job-apply linkedin'>Apply Now</a>" +
+                            "<a href='https://www.linkedin.com/jobs/search/?keywords=" + encodeURIComponent(job.title) + "' target='_blank' class='job-apply indeed'>LinkedIn</a>" +
+                            "<a href='https://www.indeed.com/jobs?q=" + encodeURIComponent(job.title) + "' target='_blank' class='job-apply glassdoor'>Indeed</a>" +
+                          "</div>" +
+                        "</div>";
+                      });
+                      document.getElementById("jobsList").innerHTML = html;
+                    }
+                  });
+              }
+            }
           });
 
         saveHistory(query);
@@ -1209,24 +1687,25 @@
           return;
         }
 
-        let html = `<div class="history-header">📜 Recent searches</div>`;
+        let html = `<div class="history-header">
+          <span>Recent Searches</span>
+          <span class="history-clear" onclick="clearHistory()">Clear all</span>
+        </div>
+        <div class="history-list">`;
+
         history.forEach((h, index) => {
           const timeAgo = getTimeAgo(h.timestamp);
-          html += `
-            <div class="history-item" onclick="selectHistory('${h.query.replace(
-              /'/g,
-              "\\'"
-            )}')">
-                <span class="history-icon">🔍</span>
+          html += `<div class="history-item" onclick="selectHistory('${h.query.replace(/'/g, "\\'")}')">
+                <div class="history-icon">🔍</div>
                 <div class="history-content">
-                    <span class="history-text">${h.query}</span>
-                    <span class="history-time">${timeAgo}</span>
+                    <div class="history-query">${h.query}</div>
+                    <div class="history-time">${timeAgo}</div>
                 </div>
-                <span class="history-delete" onclick="event.stopPropagation(); deleteHistory(${index})">✕</span>
-            </div>
-        `;
+                <button class="history-delete" onclick="event.stopPropagation(); deleteHistory(${index})">✕</button>
+            </div>`;
         });
-        html += `<div class="history-clear" onclick="clearHistory()">🗑️ Clear all</div>`;
+
+        html += `</div>`;
 
         historyDiv.innerHTML = html;
       }
@@ -1401,6 +1880,66 @@ function deleteFavorite(id) {
 }
 
 loadFavorites();
+    
+
+      // 🤖 AI Expert Chat
+      let currentSearchQuery = "";
+
+      function sendChatMessage() {
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        // Add user message
+        const chatBody = document.getElementById("chatBody");
+        chatBody.innerHTML += '<div class="ai-chat-message user">' + message + '</div>';
+        input.value = "";
+
+        // Scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Show loading
+        const loadingDiv = document.createElement("div");
+        loadingDiv.className = "ai-chat-message ai";
+        loadingDiv.id = "chatLoading";
+        loadingDiv.innerHTML = '<span style="opacity: 0.7;">Thinking...</span>';
+        chatBody.appendChild(loadingDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Send to API
+        fetch("/api/chat?q=" + encodeURIComponent(currentSearchQuery) + "&message=" + encodeURIComponent(message))
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById("chatLoading").remove();
+            if (data.success) {
+              chatBody.innerHTML += '<div class="ai-chat-message ai">' + data.response.replace(/\n/g, "<br>") + '</div>';
+            } else {
+              chatBody.innerHTML += '<div class="ai-chat-message ai">Sorry, I could not answer that. Please try again.</div>';
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
+          })
+          .catch(() => {
+            document.getElementById("chatLoading").remove();
+            chatBody.innerHTML += '<div class="ai-chat-message ai">Sorry, something went wrong. Please try again.</div>';
+            chatBody.scrollTop = chatBody.scrollHeight;
+          });
+      }
+
+      function sendChatSuggestion(suggestion) {
+        document.getElementById("chatInput").value = suggestion;
+        sendChatMessage();
+      }
+
+      function showChatBox(query) {
+        currentSearchQuery = query;
+        document.getElementById("aiChatBox").style.display = "block";
+        document.getElementById("chatBody").innerHTML = '<div class="ai-chat-message ai">Hello! I can help you learn more about "<strong>' + query + '</strong>". Ask me anything!</div>';
+      }
+
+      function closeChatBox() {
+        document.getElementById("aiChatBox").style.display = "none";
+      }
+
     </script>
   
     <!-- Summary Modal -->
