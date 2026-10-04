@@ -49,7 +49,6 @@ Create a `.env` file:
 ### 1. Clone Repo
 ### 2. Install Dependencies
 ### 3. Run App
-### 3. Run App
 
 ---
 
