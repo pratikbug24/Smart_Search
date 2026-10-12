@@ -1,88 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2644619789277551"
-     crossorigin="anonymous"></script>
-    <title>Signup</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: linear-gradient(135deg, #34a853, #66bb6a);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+{% extends "auth_base.html" %}
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 320px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+{% block title %}Sign up · Smart Search{% endblock %}
 
-        h2 {
-            margin-bottom: 20px;
-        }
+{% block panel %}
+<h1>Start searching smarter.</h1>
+<p>Create a free account to unlock AI answers, search history, favorites and a personalised experience.</p>
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        input:focus {
-            border-color: #34a853;
-            box-shadow: 0 0 5px rgba(52,168,83,0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 8px;
-            background: #34a853;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #2c8f47;
-        }
-
-        a {
-            color: #34a853;
-            text-decoration: none;
-        }
-
-        p {
-            margin-top: 15px;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="card">
-    <h2>📝 Sign Up</h2>
-
-    <form method="POST">
-        <input name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Create Account</button>
-    </form>
-
-    <p>Already have an account? <a href="/login">Login</a></p>
+<div class="panel-points">
+  <div class="pt"><span class="ic">🚀</span> Free to get started</div>
+  <div class="pt"><span class="ic">✨</span> AI answers on every search</div>
+  <div class="pt"><span class="ic">🔒</span> Your data stays yours</div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block heading %}Create your account{% endblock %}
+{% block subheading %}It's free and takes less than a minute.{% endblock %}
+
+{% block form %}
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+<form method="POST">
+  <div class="field">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" placeholder="Choose a username" required autofocus />
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" placeholder="Create a password" required minlength="4" />
+  </div>
+
+  <button class="btn btn-primary" type="submit">Create account →</button>
+</form>
+
+<div class="divider">or</div>
+
+<a class="btn btn-google" href="/login/google">Sign up with Google</a>
+{% endblock %}
+
+{% block foot %}Already have an account? <a href="/login">Log in</a>{% endblock %}

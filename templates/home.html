@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Search — AI-Powered Search Engine</title>
+  <meta name="description" content="Smart Search is an AI-powered search engine with web, image and video search, AI answers, live suggestions and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #667eea;
+      --brand-2: #764ba2;
+      --pink: #f5576c;
+      --blue: #4facfe;
+      --ink: #1a1a2e;
+      --muted: #6b7280;
+      --bg: #ffffff;
+      --surface: #f7f8fd;
+      --border: rgba(102, 126, 234, 0.16);
+      --shadow: 0 20px 45px rgba(38, 45, 118, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* ============ NAVBAR ============ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.82);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    .logo-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .nav-links a { color: #444; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--brand); }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 24px;
+      border-radius: 50px;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .btn-ghost { background: transparent; color: #444; padding: 12px 16px; }
+    .btn-ghost:hover { color: var(--brand); }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--pink) 0%, #f093fb 100%);
+      box-shadow: 0 10px 25px rgba(245, 87, 108, 0.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(245, 87, 108, 0.45); }
+
+    .btn-dark {
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn-dark:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(102, 126, 234, 0.45); }
+
+    .btn-lg { padding: 16px 34px; font-size: 16px; }
+
+    .burger {
+      display: none;
+      background: transparent;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    /* ============ HERO ============ */
+    .hero {
+      position: relative;
+      padding: 90px 0 80px;
+      background:
+        radial-gradient(900px 420px at 12% -10%, rgba(102, 126, 234, 0.20), transparent 60%),
+        radial-gradient(800px 420px at 92% 0%, rgba(245, 87, 108, 0.16), transparent 60%);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(102, 126, 234, 0.12);
+      color: var(--brand-2);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin: 22px 0 18px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p.lead {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 44px;
+    }
+
+    .hero-stats .num { font-size: 26px; font-weight: 700; color: var(--ink); }
+    .hero-stats .lbl { font-size: 13px; color: var(--muted); }
+
+    /* Mock browser preview */
+    .preview {
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: rotate(1.2deg);
+    }
+
+    .preview-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #febc2e; }
+    .dot.g { background: #28c840; }
+
+    .preview-url {
+      margin-left: 12px;
+      flex: 1;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+    }
+
+    .preview-body { padding: 22px; }
+
+    .preview-search {
+      display: flex;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px;
+      align-items: center;
+    }
+
+    .preview-search span.q { flex: 1; padding: 8px 16px; font-size: 14px; color: #555; }
+    .preview-search .go {
+      background: linear-gradient(135deg, var(--pink), #f093fb);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 50px;
+    }
+
+    .preview-answer {
+      margin-top: 16px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.10), rgba(245,87,108,0.08));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+
+    .preview-answer .tag { font-size: 11px; font-weight: 700; color: var(--brand-2); letter-spacing: 0.4px; }
+    .preview-answer p { margin: 6px 0 0; font-size: 13px; color: #555; }
+
+    .preview-results { margin-top: 16px; display: grid; gap: 10px; }
+    .preview-results .row { display: flex; gap: 10px; align-items: center; }
+    .preview-results .thumb {
+      width: 42px; height: 42px; border-radius: 10px; flex: none;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    }
+    .preview-results .row:nth-child(2) .thumb { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
+    .preview-results .row:nth-child(3) .thumb { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+    .preview-results .lines { flex: 1; }
+    .preview-results .line { height: 8px; border-radius: 6px; background: #eceefb; margin-bottom: 6px; }
+    .preview-results .line.short { width: 55%; }
+
+    /* ============ SECTION HEADINGS ============ */
+    section { padding: 88px 0; }
+
+    .eyebrow {
+      text-align: center;
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin: 10px 0 14px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 56px;
+      font-size: 17px;
+    }
+
+    /* ============ FEATURES ============ */
+    .features { background: var(--surface); }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px 26px;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow);
+      border-color: rgba(102, 126, 234, 0.4);
+    }
+
+    .card .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(245,87,108,0.15));
+    }
+
+    .card h3 { margin: 0 0 8px; font-size: 19px; font-weight: 700; }
+    .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+    /* ============ SHOWCASE ============ */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+    }
+
+    .shot {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background: #fff;
+    }
+
+    .shot img { width: 100%; display: block; }
+    .shot .cap { padding: 16px 20px; font-weight: 600; font-size: 15px; }
+
+    /* ============ FAQ ============ */
+    .faq { background: var(--surface); }
+
+    .faq-list { max-width: 780px; margin: 0 auto; display: grid; gap: 14px; }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 20px 24px;
+      font-weight: 600;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .faq-item summary::-webkit-details-marker { display: none; }
+
+    .faq-item summary::after {
+      content: "+";
+      font-size: 22px;
+      color: var(--brand);
+      transition: transform 0.2s;
+      flex: none;
+    }
+
+    .faq-item[open] summary::after { transform: rotate(45deg); }
+
+    .faq-item p { margin: 0; padding: 0 24px 22px; color: var(--muted); font-size: 15px; }
+
+    /* ============ CONTACT ============ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    .contact-info h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.8px; margin: 0 0 14px; }
+    .contact-info p { color: var(--muted); margin-bottom: 26px; }
+
+    .contact-points { display: grid; gap: 16px; }
+    .contact-points .cp { display: flex; gap: 14px; align-items: center; }
+    .contact-points .cp .ic {
+      width: 44px; height: 44px; border-radius: 12px; flex: none;
+      display: grid; place-items: center; font-size: 20px;
+      background: rgba(102,126,234,0.12);
+    }
+    .contact-points .cp .t { font-weight: 600; font-size: 15px; }
+    .contact-points .cp .s { color: var(--muted); font-size: 14px; }
+
+    .form-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; color: #444; }
+    .field input, .field textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid #dfe3f0;
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fbfbfe;
+    }
+    .field textarea { resize: vertical; min-height: 120px; }
+    .field input:focus, .field textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+    }
+
+    .form-note { font-size: 13px; color: var(--muted); margin-top: 12px; text-align: center; }
+    .form-success {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(40, 200, 64, 0.12);
+      color: #1a7f37;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: var(--ink);
+      color: #c9cbe0;
+      padding: 54px 0 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 36px;
+    }
+
+    footer .logo { color: #fff; }
+    footer p { color: #9296b3; font-size: 14px; margin: 14px 0 0; max-width: 320px; }
+    footer h4 { color: #fff; font-size: 15px; margin: 0 0 14px; }
+    footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 14px; }
+    footer ul a { color: #c9cbe0; transition: color 0.2s; }
+    footer ul a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #9296b3;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+      .hero h1 { font-size: 44px; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 34px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .burger { display: block; }
+      .nav-links.open {
+        display: flex;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 24px 20px;
+        box-shadow: var(--shadow);
+      }
+      .nav-links.open a { padding: 12px 0; width: 100%; }
+    }
+
+    @media (max-width: 620px) {
+      .hero h1 { font-size: 36px; }
+      .section-title { font-size: 30px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 26px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .btn-lg { width: 100%; }
+      .nav-cta .btn-dark { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ============ NAVBAR ============ -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="logo" href="/home">
+        <span class="logo-badge">🔍</span>
+        Smart&nbsp;Search
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#features">Features</a>
+        <a href="#showcase">Preview</a>
+        <a href="#faq">FAQs</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a class="btn btn-ghost" href="/login">Log in</a>
+        <a class="btn btn-dark" href="/signup">Get started</a>
+        <button class="burger" onclick="toggleNav()" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill">✨ AI-powered search, reimagined</span>
+        <h1>Search the web <span class="gradient-text">smarter</span>, not harder.</h1>
+        <p class="lead">
+          Smart Search blends Google-quality results with AI answers, live suggestions,
+          image and video search — all in one clean, lightning-fast interface.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/signup">Start searching free →</a>
+          <a class="btn btn-dark btn-lg" href="#features">Explore features</a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="num">3</div>
+            <div class="lbl">Search modes</div>
+          </div>
+          <div>
+            <div class="num">AI</div>
+            <div class="lbl">Direct answers</div>
+          </div>
+          <div>
+            <div class="num">0$</div>
+            <div class="lbl">To get started</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview" aria-hidden="true">
+        <div class="preview-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="preview-url">smartsearch.app — what is machine learning?</span>
+        </div>
+        <div class="preview-body">
+          <div class="preview-search">
+            <span class="q">🔎 what is machine learning?</span>
+            <span class="go">Search</span>
+          </div>
+
+          <div class="preview-answer">
+            <div class="tag">✨ AI DIRECT ANSWER</div>
+            <p>Machine learning is a branch of AI where systems learn patterns from data to make predictions without being explicitly programmed.</p>
+          </div>
+
+          <div class="preview-results">
+            <div class="row">
+              <div class="thumb"></div>
+              <div class="lines"><div class="line"></div><div class="line short"></div></div>
+            </div>
+            <div class="row">
+              <div class="thumb"></div>
+              <div class="lines"><div class="line"></div><div class="line short"></div></div>
+            </div>
+            <div class="row">
+              <div class="thumb"></div>
+              <div class="lines"><div class="line"></div><div class="line short"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="eyebrow">Features</div>
+      <h2 class="section-title">Everything you need to find answers</h2>
+      <p class="section-sub">
+        A complete search experience built for speed and clarity — from instant AI
+        summaries to image grids and video cards.
+      </p>
+
+      <div class="feature-grid">
+        <div class="card">
+          <div class="icon">🌐</div>
+          <h3>Web Search</h3>
+          <p>Get accurate, up-to-date Google results served through a fast, distraction-free interface.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">🖼️</div>
+          <h3>Image Search</h3>
+          <p>Explore a clean, responsive grid of images with one click straight from your query.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">🎬</div>
+          <h3>Video Search</h3>
+          <p>Find relevant videos in a YouTube-style card layout, ready to watch in seconds.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">✨</div>
+          <h3>AI Direct Answers</h3>
+          <p>Skip the scrolling — an AI summary sits right at the top and answers your question instantly.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">⚡</div>
+          <h3>Live Suggestions</h3>
+          <p>Real-time autocomplete helps you phrase the perfect query as you type.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">💬</div>
+          <h3>AI Expert Chat</h3>
+          <p>Ask follow-up questions and dig deeper on any topic with a built-in AI assistant.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">🧠</div>
+          <h3>Search History</h3>
+          <p>Your recent searches are saved locally so you can pick up exactly where you left off.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">🌙</div>
+          <h3>Dark & Light Mode</h3>
+          <p>Switch themes instantly and search comfortably, day or night.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">🔐</div>
+          <h3>Accounts & Profiles</h3>
+          <p>Sign up with email or Google, then manage your profile, settings and favorites.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOWCASE ============ -->
+  <section id="showcase">
+    <div class="wrap">
+      <div class="eyebrow">Preview</div>
+      <h2 class="section-title">See it in action</h2>
+      <p class="section-sub">A clean Google-like experience for search, with rich results for images and videos.</p>
+
+      <div class="showcase-grid">
+        <div class="shot">
+          <img src="{{ url_for('images', filename='screen1.png') }}" alt="Smart Search home screen" />
+          <div class="cap">🏠 Clean search home</div>
+        </div>
+        <div class="shot">
+          <img src="{{ url_for('images', filename='screen2.png') }}" alt="Smart Search results screen" />
+          <div class="cap">🔍 Rich results & AI answers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <div class="eyebrow">FAQs</div>
+      <h2 class="section-title">Frequently asked questions</h2>
+      <p class="section-sub">Everything you might want to know before getting started.</p>
+
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>What is Smart Search?</summary>
+          <p>Smart Search is an AI-powered search engine web app that combines Google results via SerpAPI with AI summaries, live suggestions, image search and video search in one clean interface.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do I need an account to use it?</summary>
+          <p>Yes — you can sign up with an email and password or log in instantly with your Google account. Your account unlocks search history, favorites, and profile settings.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>What search modes are available?</summary>
+          <p>Three: All (web results), Images, and Videos. Use the tabs above the results to switch between them instantly.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>How do the AI answers work?</summary>
+          <p>When you run a web search, Smart Search generates a concise AI direct answer at the top of the results, plus "People also ask" follow-ups and an AI chat for deeper questions.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is Smart Search free to use?</summary>
+          <p>Yes, it's free to get started. The app runs on a free SerpAPI plan, so there is a daily search limit, and the free hosting tier may sleep after inactivity.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Does it support dark mode?</summary>
+          <p>Absolutely. Toggle between dark and light themes with one click — your preference is saved and restored on your next visit.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is my search history private?</summary>
+          <p>Your recent searches are stored locally in your browser, not on our servers, and you can clear them at any time.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <div class="eyebrow" style="text-align:left;">Contact</div>
+        <h2>Let's talk</h2>
+        <p>Have a question, feature idea, or found a bug? Send us a message and we'll get back to you.</p>
+
+        <div class="contact-points">
+          <div class="cp">
+            <div class="ic">📧</div>
+            <div>
+              <div class="t">Email</div>
+              <div class="s">hello@smartsearch.app</div>
+            </div>
+          </div>
+          <div class="cp">
+            <div class="ic">💬</div>
+            <div>
+              <div class="t">Community</div>
+              <div class="s">Open an issue or pull request on GitHub</div>
+            </div>
+          </div>
+          <div class="cp">
+            <div class="ic">⚡</div>
+            <div>
+              <div class="t">Response time</div>
+              <div class="s">Usually within 1–2 business days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form class="form-card" id="contactForm" onsubmit="return handleContact(event)">
+        <div class="field">
+          <label for="cName">Name</label>
+          <input id="cName" name="name" type="text" placeholder="Your name" required />
+        </div>
+        <div class="field">
+          <label for="cEmail">Email</label>
+          <input id="cEmail" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <div class="field">
+          <label for="cMessage">Message</label>
+          <textarea id="cMessage" name="message" placeholder="How can we help?" required></textarea>
+        </div>
+        <button class="btn btn-primary btn-lg" type="submit" style="width:100%;">Send message</button>
+        <div class="form-success" id="formSuccess">✅ Thanks! Your message has been noted.</div>
+        <div class="form-note">We'll never share your details with anyone.</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <a class="logo" href="/home"><span class="logo-badge">🔍</span> Smart&nbsp;Search</a>
+          <p>An AI-powered search engine built with Flask and SerpAPI, delivering web, image and video results with a clean Google-like UI.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#showcase">Preview</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Get started</h4>
+          <ul>
+            <li><a href="/signup">Create account</a></li>
+            <li><a href="/login">Log in</a></li>
+            <li><a href="/ai-chat">AI Chat</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Smart Search. All rights reserved.</span>
+        <span>Built by Pratik Pawar</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // Close mobile menu after choosing a link
+    document.querySelectorAll('#navLinks a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    function handleContact(event) {
+      event.preventDefault();
+      const form = event.target;
+      document.getElementById('formSuccess').style.display = 'block';
+      form.reset();
+      setTimeout(function () {
+        document.getElementById('formSuccess').style.display = 'none';
+      }, 4000);
+      return false;
+    }
+  </script>
+</body>
+</html>

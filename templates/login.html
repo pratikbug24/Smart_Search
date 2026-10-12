@@ -1,103 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2644619789277551"
-     crossorigin="anonymous"></script>
-    <title>Login</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: linear-gradient(135deg, #1a73e8, #4285f4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+{% extends "auth_base.html" %}
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 320px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+{% block title %}Log in · Smart Search{% endblock %}
 
-        h2 {
-            margin-bottom: 20px;
-        }
+{% block panel %}
+<h1>Welcome back.</h1>
+<p>Log in to continue your searches, revisit your history and pick up right where you left off.</p>
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        input:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 5px rgba(26,115,232,0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 8px;
-            background: #1a73e8;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #1558b0;
-        }
-
-        .google-btn {
-            background: white;
-            color: black;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-        }
-
-        .google-btn:hover {
-            background: #f1f1f1;
-        }
-
-        a {
-            color: #1a73e8;
-            text-decoration: none;
-        }
-
-        p {
-            margin-top: 15px;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="card">
-    <h2>🔐 Login</h2>
-
-    <form method="POST">
-        <input name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
-
-    <a href="/login/google">
-        <button class="google-btn">Login with Google</button>
-    </a>
-
-    <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+<div class="panel-points">
+  <div class="pt"><span class="ic">🧠</span> Your search history, saved</div>
+  <div class="pt"><span class="ic">⭐</span> Favorites &amp; saved results</div>
+  <div class="pt"><span class="ic">💬</span> AI chat on any topic</div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block heading %}Log in{% endblock %}
+{% block subheading %}Enter your details to access Smart Search.{% endblock %}
+
+{% block form %}
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+<form method="POST">
+  <div class="field">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" placeholder="Your username" required autofocus />
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" placeholder="Your password" required />
+  </div>
+
+  <button class="btn btn-primary" type="submit">Log in →</button>
+</form>
+
+<div class="divider">or</div>
+
+<a class="btn btn-google" href="/login/google">Continue with Google</a>
+{% endblock %}
+
+{% block foot %}Don't have an account? <a href="/signup">Create one</a>{% endblock %}

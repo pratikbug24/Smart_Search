@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, send_from_directory
 from authlib.integrations.flask_client import OAuth
 from serpapi import GoogleSearch
 import sqlite3
@@ -43,12 +43,22 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'}
 )
 
+# ================== 🖼️ SCREENSHOTS ==================
+@app.route('/images/<path:filename>')
+def images(filename):
+    return send_from_directory('images', filename)
+
+# ================== 🏠 LANDING PAGE ==================
+@app.route('/home')
+def landing():
+    return render_template('home.html')
+
 # ================== 🏠 HOME ==================
 @app.route('/')
 def home():
     user = session.get('user')
     if not user:
-        return redirect('/login')
+        return render_template('home.html')
     return render_template('index.html', user=user)
 
 # ================== 🔑 LOGIN ==================
@@ -73,7 +83,7 @@ def login():
             }
             return redirect('/')
         else:
-            return "Invalid username or password ❌"
+            return render_template('login.html', error="Invalid username or password.")
 
     return render_template('login.html')
 
@@ -94,7 +104,7 @@ def signup():
             return redirect('/login')
         except:
             conn.close()
-            return "User already exists ❌"
+            return render_template('signup.html', error="That username is already taken.")
 
     return render_template('signup.html')
 

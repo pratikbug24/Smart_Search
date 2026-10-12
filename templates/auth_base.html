@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Smart Search{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #667eea;
+      --brand-2: #764ba2;
+      --pink: #f5576c;
+      --ink: #1a1a2e;
+      --muted: #6b7280;
+      --surface: #f7f8fd;
+      --border: rgba(102, 126, 234, 0.16);
+      --shadow: 0 20px 45px rgba(38, 45, 118, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ============ BRAND PANEL ============ */
+    .panel {
+      position: relative;
+      overflow: hidden;
+      padding: 54px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 60%, #5b3a8e 100%);
+    }
+
+    .panel::before,
+    .panel::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+    }
+
+    .panel::before {
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(245, 87, 108, 0.55), transparent 70%);
+      top: -120px; right: -120px;
+    }
+
+    .panel::after {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(79, 172, 254, 0.5), transparent 70%);
+      bottom: -110px; left: -90px;
+    }
+
+    .panel > * { position: relative; z-index: 1; }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.4px;
+      color: #fff;
+    }
+
+    .logo-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(6px);
+    }
+
+    .panel-mid h1 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin: 0 0 16px;
+    }
+
+    .panel-mid p {
+      margin: 0 0 30px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 16px;
+      max-width: 420px;
+    }
+
+    .panel-points { display: grid; gap: 14px; }
+
+    .panel-points .pt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .panel-points .pt .ic {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .panel-foot { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+
+    /* ============ FORM PANEL ============ */
+    .form-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background:
+        radial-gradient(700px 340px at 100% 0%, rgba(102, 126, 234, 0.10), transparent 60%);
+    }
+
+    .form-card { width: 100%; max-width: 400px; }
+
+    .form-card h2 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin: 0 0 8px;
+    }
+
+    .form-card .sub {
+      color: var(--muted);
+      margin: 0 0 28px;
+      font-size: 15px;
+    }
+
+    .field { margin-bottom: 18px; }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+      color: #444;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid #dfe3f0;
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      background: #fbfbfe;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 15px 24px;
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      box-shadow: 0 12px 26px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(102, 126, 234, 0.45); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 22px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e6e9f5;
+    }
+
+    .btn-google {
+      background: #fff;
+      color: #333;
+      border: 1px solid #dfe3f0;
+      box-shadow: 0 6px 16px rgba(38, 45, 118, 0.06);
+    }
+
+    .btn-google:hover { background: #f7f8fd; transform: translateY(-2px); }
+
+    .form-foot {
+      text-align: center;
+      margin-top: 26px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .form-foot a { color: var(--brand); font-weight: 600; }
+    .form-foot a:hover { text-decoration: underline; }
+
+    .error {
+      background: rgba(245, 87, 108, 0.10);
+      border: 1px solid rgba(245, 87, 108, 0.3);
+      color: #c62b45;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .back-home:hover { color: var(--brand); }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 900px) {
+      body { grid-template-columns: 1fr; }
+      .panel {
+        padding: 34px 28px;
+        min-height: auto;
+        gap: 26px;
+      }
+      .panel-mid h1 { font-size: 30px; }
+      .panel-mid p { margin-bottom: 20px; }
+      .panel-points { display: none; }
+      .panel-foot { display: none; }
+      .form-side { padding: 40px 22px 60px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ============ BRAND PANEL ============ -->
+  <aside class="panel">
+    <a class="logo" href="/home">
+      <span class="logo-badge">🔍</span>
+      Smart&nbsp;Search
+    </a>
+
+    <div class="panel-mid">
+      {% block panel %}
+      <h1>Search the web smarter, not harder.</h1>
+      <p>Google-quality results, AI answers, image and video search — all in one clean interface.</p>
+
+      <div class="panel-points">
+        <div class="pt"><span class="ic">✨</span> AI direct answers &amp; expert chat</div>
+        <div class="pt"><span class="ic">🖼️</span> Web, image and video search</div>
+        <div class="pt"><span class="ic">🌙</span> Dark &amp; light mode</div>
+      </div>
+      {% endblock %}
+    </div>
+
+    <div class="panel-foot">© 2026 Smart Search · Built by Pratik Pawar</div>
+  </aside>
+
+  <!-- ============ FORM PANEL ============ -->
+  <main class="form-side">
+    <div class="form-card">
+      <a class="back-home" href="/home">← Back to home</a>
+
+      <h2>{% block heading %}Welcome{% endblock %}</h2>
+      <p class="sub">{% block subheading %}{% endblock %}</p>
+
+      {% block form %}{% endblock %}
+
+      <div class="form-foot">{% block foot %}{% endblock %}</div>
+    </div>
+  </main>
+</body>
+</html>
