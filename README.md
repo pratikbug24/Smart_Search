@@ -61,9 +61,13 @@ Create a `.env` file:
 
 <p align="center">
   <h4>Home</h4>
-  <img src="images/screen1.png" />
+  <img src="images/Home.png" />
   <h4>Search</h4>
-  <img src="images/screen2.png" />
+  <img src="images/search.png" />
+  <h4>Profile</h4>
+  <img src="images/Profile.png" />
+  <h4>Settings</h4>
+  <img src="images/Settings.png" />
 </p>
 ---
 
